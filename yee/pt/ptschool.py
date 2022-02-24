@@ -32,9 +32,13 @@ class PTSchoolV2(NexusProgramSite):
         :param text: 网页源代码
         :return:
         """
-        soup = BeautifulSoup(text)
         search_result = []
-        for i, item in enumerate(soup.find('table', class_='mainouter').find('table', class_='torrents').findAll('tr')[1:]):
+        soup = BeautifulSoup(text)
+        try:
+            find_tr = soup.find('table', class_='mainouter').find('table', class_='torrents').findAll('tr')[1:]
+        except Exception as e:
+            find_tr = []
+        for i, item in enumerate(find_tr):
             rowfollow_tag = item.findAll('td', 'rowfollow')
             if len(rowfollow_tag) != 0:
                 t = Torrent()
@@ -70,12 +74,14 @@ class PTSchoolV2(NexusProgramSite):
                 t.name = a_label.get('title')
                 t.url = self.get_site() + '/' + 'download.php?id=' + t_id
                 # 获取object
-                if "Free" in rowfollow_tag[1].findAll('img')[0].get('alt'):
-                    t_free_deadline = re.findall('剩余时间：<span title="([^"]+)"', str(rowfollow_tag[1]))
-                    if len(t_free_deadline) == 0:
-                        t.free_deadline = datetime.datetime.max
-                    else:
-                        t.free_deadline = datetime.datetime.strptime(t_free_deadline[0], '%Y-%m-%d %H:%M:%S')
+                for free_item in rowfollow_tag[1].findAll('img'):
+                    if "alt" in free_item.attrs and "Free" in free_item.get('alt'):
+                        t_free_deadline = re.findall('剩余时间：<span title="([^"]+)"', str(rowfollow_tag[1]))
+                        if len(t_free_deadline) == 0:
+                            t.free_deadline = datetime.datetime.max
+                        else:
+                            t.free_deadline = datetime.datetime.strptime(t_free_deadline[0], '%Y-%m-%d %H:%M:%S')
+                        break
                 object_tag = copy.copy(rowfollow_tag[1])
                 [s.extract() for s in rowfollow_tag[1].find_all("a")]
                 [s.extract() for s in rowfollow_tag[1].find_all("b")]
@@ -106,3 +112,4 @@ class PTSchoolV2(NexusProgramSite):
             return None
         value, params = cgi.parse_header(unquote(response.headers['Content-Disposition']))
         return params['filename']
+
