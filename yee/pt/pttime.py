@@ -33,9 +33,10 @@ class PTtime(NexusProgramSite):
         if text is None or text.strip() == '':
             return None
         # match_login_user = re.search(r'class=[\'"][^\'"]+[\'"]>(?:<a.+>)<b>(.+)</b>.*</a>.*</span>', text)
-        match_login_user = re.search(r'class=[\'"][^\'"]+[\'"]><b>(.+)</b>.*</a>', text)
+        match_login_user = re.findall(r'<a.+href="userdetails.php.+" class=\'User_Name\'><b>(.*?)</b></a>', text)[0]
         if match_login_user:
-            return StringUtils.trimhtml(match_login_user.group(1))
+            # return StringUtils.trimhtml(match_login_user.group(1))
+            return match_login_user
         else:
             return None
 
