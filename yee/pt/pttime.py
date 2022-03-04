@@ -119,8 +119,8 @@ class PTtime(NexusProgramSite):
                 t.upload_count = int(rowfollow_tag[6].text.replace(',', ''))
                 if rowfollow_tag[6].find('span') is not None or rowfollow_tag[6].find('font') is not None:
                     t.red_seed = True
-                # 下载人数
-                t.download_count = int(rowfollow_tag[7].text.replace(',', ''))
+                # 已完成数
+                t.download_count = int(rowfollow_tag[8].text.replace(',', ''))
                 search_result.append(t)
         return search_result
 
