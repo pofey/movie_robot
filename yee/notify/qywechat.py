@@ -17,7 +17,7 @@ class QywechatNotify(Notify):
     def __init__(self, **args):
         args.setdefault('touser', '@all')
         self.args = args
-        self.message_template = args['message_template']
+        self.message_template = args.get('message_template')
         self.token_cache = None
         self.token_expires_time = None
 
@@ -72,6 +72,39 @@ class QywechatNotify(Notify):
                         "picurl": context['cover']
                     }
                 ]
+            }
+        }))
+        if res.json()['errcode'] != 0:
+            logging.error('企业微信推送失败：%s' % res.json())
+
+    def send_textcard(self, touser: str, textcard: dict):
+        access_token = self.get_access_token()
+        if access_token is None:
+            logging.error('获取企业微信access_token失败，请检查你的corpid和corpsecret配置')
+            return
+        url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + access_token
+        jsonstr = json.dumps({
+            'touser': touser,
+            'agentid': self.args['agentid'],
+            'msgtype': 'textcard',
+            'textcard': textcard
+        })
+        res = self.req.post_res(url, params=jsonstr)
+        if res.json()['errcode'] != 0:
+            logging.error('企业微信推送失败：%s' % res.json())
+
+    def send_text(self, touser: str, content: str):
+        access_token = self.get_access_token()
+        if access_token is None:
+            logging.error('获取企业微信access_token失败，请检查你的corpid和corpsecret配置')
+            return
+        url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + access_token
+        res = self.req.post_res(url, params=json.dumps({
+            'touser': touser,
+            'agentid': self.args['agentid'],
+            'msgtype': 'text',
+            'text': {
+                "content": content
             }
         }))
         if res.json()['errcode'] != 0:

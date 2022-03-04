@@ -6,18 +6,11 @@ https://registry.hub.docker.com/r/yipengfei/movie-robot/
 # 特别说明
 现在只有两种方式可以获得激活码使用本镜像：
 * 如果你是开发者，可以扩展适配一个pt站点，可以获得激活码一枚。pt站的适配支持，源码中给出了一个示范；
-* 通过打赏作者，可以获得激活码，打赏码在下面，也可以直接访问：https://yee-1254270141.cos.ap-beijing.myqcloud.com/movie_robot/pay.jpg
+* 通过打赏作者，可以获得激活码，现在永久买断使用权128元，打赏码在下面，也可以直接访问：https://yee-1254270141.cos.ap-beijing.myqcloud.com/movie_robot/pay.jpg
 * 如果你有其他为项目作出重大贡献的行为，也可以获得激活码。
 
-# 启动命令
-```
-docker run -itd --restart=always --name=movie-robot -v /volume1/docker_stable/movie-robot:/data --env 'LICENSE_KEY=abc'  yipengfei/movie-robot:latest
-```
--v 中源路径改成你自己的
---env的激活码也改成你自己的
-
 [申请一周体验激活码](https://docs.qq.com/form/page/DS3FsQktHcGJ0b2xH)
-这个填好了我会每天晚上睡前发邀到邮箱里
+2022.03.04说明，近期工作忙，开发web中，没时间处理和回答新人配置问题，停止发放免费激活码
 
 官方telgram免费大群：[加入智能影音机器人交流群](https://t.me/+shOuvzcee9I4ZDll)
 进群有机会获得免费的体验码
@@ -37,6 +30,15 @@ docker run -itd --restart=always --name=movie-robot -v /volume1/docker_stable/mo
 # 更新日志
 ## 如何保持机器人是最新版本
 Docker应用升级指南：https://feather-purple-bdd.notion.site/docker-09e1db16b2b14040840bd2f5660e666c
+
+2022.03.04(Beta220304v1)
+1. 新增Web API系统，支持并行聚合多站搜索，按关键字或豆瓣id
+2. 利用API能力，新增微信搜索功能，可以在企业微信的应用设置消息接收，直接发送关键字搜索，搜索后经过机器人多策略排序后，点击直接下载
+3. 修复jackett的一些BUG
+4. 修复qbit下载器删除种子后报错的BUG
+5. 优化pthome用户名匹配
+6. 修复pt站种子剧集分析的BUG
+7. 修复SSD获取下载数错误的BUG 
 
 2022.02.28
 1. 新增Beta版tag
