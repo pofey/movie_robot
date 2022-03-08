@@ -49,7 +49,10 @@ class PTOurbits(NexusProgramSite):
         if not soup.find('table', class_="torrents"):
             return []
 
-        for row in soup.find('table', class_="torrents").findAll('tr', recursive=False)[1:]:
+        torrents_rows = soup.find('table', class_="torrents").findAll('tr', recursive=False)
+        if 0 == len(torrents_rows):
+            torrents_rows = soup.find('table', class_="torrents").find("tbody").findAll('tr', recursive=False)[1:]
+        for row in torrents_rows:
             t = Torrent()
             t.site_name = self.get_site_name()
             t.site = self.get_site()
